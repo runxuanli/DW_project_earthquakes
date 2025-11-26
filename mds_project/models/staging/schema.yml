@@ -1,0 +1,38 @@
+version: 2
+
+sources:
+  - name: earthquakes_source
+    database: FIVETRAN_DATABASE
+    schema: EARTHQUAKE_GECKO
+    tables:
+      - name: EARTHQUAKES
+
+models:
+  - name: stg_earthquakes_raw
+    description: "Cleaned and normalized earthquake staging table"
+    columns:
+      - name: event_id
+        tests:
+          - not_null
+          - unique
+
+  - name: dim_region
+    description: "Maps coordinates to regions"
+    columns:
+      - name: region
+        tests:
+          - not_null
+
+  - name: fct_quakes
+    description: "Fact table with magnitude/depth bins"
+    columns:
+      - name: event_id
+        tests:
+          - not_null
+
+  - name: mart_quake_analysis
+    description: "Final analytical mart for dashboards"
+    columns:
+      - name: event_date
+        tests:
+          - not_null
